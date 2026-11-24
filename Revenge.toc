@@ -1,0 +1,11 @@
+## Interface: 16001
+## Title: Revenge
+## Notes: Journal des morts en PvP sauvage et synchronisation entre contacts.
+## Version: 1.4.3
+## DefaultState: enabled
+## IconTexture: Interface\Icons\Ability_DualWield
+## SavedVariables: RevengeJournalDB
+## SavedVariablesPerCharacter: RevengeDB
+
+Sync.lua
+Revenge.lua
