@@ -37,7 +37,6 @@ jobs:
       - name: Validate release configuration
         if: github.event_name == 'push' && github.ref_type == 'tag'
         env:
-          CF_PROJECT_ID: ${{ vars.CF_PROJECT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
           version=$(awk '/^## Version:/ { print $3 }' Revenge.toc | tr -d '\r')
@@ -45,18 +44,15 @@ jobs:
             echo '::error::The tag must match the version in Revenge.toc, for example v1.4.3.'
             exit 1
           fi
-          if [[ ! $CF_PROJECT_ID =~ ^[1-9][0-9]*$ || -z $CF_API_TOKEN ]]; then
-            echo '::error::Configure the CF_PROJECT_ID repository variable and CF_API_TOKEN repository secret.'
+          if [[ -z $CF_API_TOKEN ]]; then
+            echo '::error::Configure the CF_API_TOKEN repository secret.'
             exit 1
           fi
-          echo "project_id=$CF_PROJECT_ID" >> "$GITHUB_OUTPUT"
-        id: release
 
       - name: Publish to CurseForge
         if: github.event_name == 'push' && github.ref_type == 'tag'
         uses: BigWigsMods/packager@v2
         with:
-          args: -p ${{ steps.release.outputs.project_id }}
           pandoc: 'false'
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
